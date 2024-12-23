@@ -3,12 +3,23 @@ import numpy as np
 import cv2
 import time
 
+
 def capture_screen():
-    screenshot = pyautogui.screenshot()
-    return screenshot
+    try:
+        screenshot = pyautogui.screenshot()
+        return screenshot
+    except Exception as e:
+        print(f"Error capturing screen: {e}")
+        return None
+
 
 def screenshot_to_array(screenshot):
-    return np.array(screenshot)
+    try:
+        return np.array(screenshot)
+    except Exception as e:
+        print(f"Error converting screenshot to array: {e}")
+        return None
+
 
 class ScreenRecorder:
     def __init__(self, output_file, fps=20.0):
@@ -18,14 +29,17 @@ class ScreenRecorder:
         self.is_recording = False
 
     def write_video(self):
-        height, width, _ = self.frames[0].shape
-        fourcc = cv2.VideoWriter_fourcc(*'XVID')
-        out = cv2.VideoWriter(self.output_file, fourcc, self.fps, (width, height))
+        try:
+            height, width, _ = self.frames[0].shape
+            fourcc = cv2.VideoWriter_fourcc(*'XVID')
+            out = cv2.VideoWriter(self.output_file, fourcc, self.fps, (width, height))
 
-        for frame in self.frames:
-            out.write(frame)
+            for frame in self.frames:
+                out.write(frame)
 
-        out.release()
+            out.release()
+        except Exception as e:
+            print(f"Error writing video: {e}")
 
     def record_screen(self, duration):
         print("Recording started...")
